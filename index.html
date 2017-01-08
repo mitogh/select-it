@@ -3,7 +3,18 @@
   <head>
     <title>My custom title</title>
     <style type="text/css">
+    .select-ui {
+      position: relative;
+    }
     .select-options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+      background-color: white;
     }
     .selected {
       color: green;
@@ -16,7 +27,7 @@
   <body>
     <div class="select-container">
       <div class="select-ui">
-        <span class="select-placeholder"></span>
+        <button class="select-placeholder"></button>
         <ul class="select-options"></ul>
       </div>
       <select name="select">
