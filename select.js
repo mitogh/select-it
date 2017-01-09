@@ -10,18 +10,20 @@ function Select() {
 
   function open( event ) {
     const isOption = event.target.getAttribute('role') === 'option';
-    uiOptions.classList.toggle( 'hidden', isOption );
     ui.classList.toggle( 'select-ui--is-open', ! isOption );
   }
 
   function close() {
-    uiOptions.classList.add('hidden');
     ui.classList.remove( 'select-ui--is-open');
   }
 
   options.forEach( addOption );
-  uiOptions.classList.add('hidden');
-  ui.addEventListener('focus', open);
+  ui.addEventListener('keydown', (event) => {
+    const space = event.code === 'Space' || event.keyCode === 32;
+    if ( space ) {
+      ui.classList.add( 'select-ui--is-open');
+    }
+  });
   ui.addEventListener('blur', close);
   ui.addEventListener('click', open);
   function addOption( node, index ) {
