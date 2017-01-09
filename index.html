@@ -6,6 +6,12 @@
     .select-ui {
       position: relative;
     }
+    .select-placeholder {
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
     .select-options {
       list-style: none;
       padding: 0;
@@ -15,24 +21,56 @@
       width: 100%;
       z-index: 2;
       background-color: white;
+      border: 1px solid #CCC;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .select-ui-option {
+      padding: 10px;
     }
     .selected {
       color: green;
     }
     .disabled {
+      background-color: #F5F5F5;
+      color: #CCC;
+    }
+    .hidden {
       display: none;
+    }
+    .select-placeholder-container {
+      display: flex;
+      align-items: center;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .arrow {
+      width: 0; 
+      height: 0; 
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid #CCC;
+    }
+    .select-ui--is-open .arrow {
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid #CCC;
+      border-top: 0;
     }
     </style>
   </head>
   <body>
     <div class="select-container">
-      <div class="select-ui">
-        <button class="select-placeholder"></button>
-        <ul class="select-options"></ul>
+      <div class="select-ui" tabindex="0" role="listbox">
+        <div class="select-placeholder-container">
+          <span class="select-placeholder"></span>
+          <i class="arrow"></i>
+        </div>
+        <div class="select-options"></div>
       </div>
       <select name="select">
         <option value="value1">Value 1</option> 
-        <option value="value2">Value 2</option>
+        <option value="value2" disabled>Value 2</option>
         <option value="value3">Value 3</option>
       </select>
     </div>
