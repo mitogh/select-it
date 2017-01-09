@@ -8,13 +8,26 @@ function Select() {
   const liOptions = [];
   let previousActive = 0;
 
+  function open( event ) {
+    const isOption = event.target.getAttribute('role') === 'option';
+    uiOptions.classList.toggle( 'hidden', isOption );
+    ui.classList.toggle( 'select-ui--is-open', ! isOption );
+  }
+
+  function close() {
+    uiOptions.classList.add('hidden');
+    ui.classList.remove( 'select-ui--is-open');
+  }
+
   options.forEach( addOption );
-  uiOptions.classList.add('disabled');
-  placeholder.addEventListener('click', () => {
-    uiOptions.classList.toggle('disabled');
-  });
+  uiOptions.classList.add('hidden');
+  ui.addEventListener('focus', open);
+  ui.addEventListener('blur', close);
+  ui.addEventListener('click', open);
   function addOption( node, index ) {
-    const li = document.createElement('li');
+    const li = document.createElement('div');
+    li.classList.add('select-ui-option');
+    li.setAttribute('role', 'option');
     if ( node.selected ) {
       previousActive = index;
       setActive( node, li );
@@ -24,6 +37,8 @@ function Select() {
     li.innerHTML = node.innerHTML;
     if ( ! node.disabled ) {
       li.addEventListener( 'click', setActiveByClick(li, index) );
+    } else {
+      li.classList.add('disabled');
     }
     uiOptions.appendChild(li);
     liOptions.push( li );
@@ -36,7 +51,6 @@ function Select() {
       liOptions[previousActive].classList.remove('selected');
       liOptions[index].classList.add('selected')
       previousActive = index;
-      uiOptions.classList.toggle('disabled');
     }
     return listener;
   }
