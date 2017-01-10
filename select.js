@@ -16,7 +16,12 @@ function Select() {
   const liOptions = [];
   let previousActive = 0;
 
-  select.classList.toggle( 'select-it--native', isMobile() );
+  if ( isMobile() ) {
+    select.classList.add( 'select-it--native' );
+  } else {
+    ui.addEventListener('blur', close);
+    ui.addEventListener('click', open);
+  }
 
   function open( event ) {
     const isOption = event.target.getAttribute('role') === 'option';
@@ -34,8 +39,7 @@ function Select() {
       ui.classList.add( 'select-ui--is-open');
     }
   });
-  ui.addEventListener('blur', close);
-  ui.addEventListener('click', open);
+
   function addOption( node, index ) {
     const li = document.createElement('div');
     li.classList.add('select-ui-option');
