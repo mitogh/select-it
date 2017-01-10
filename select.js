@@ -1,3 +1,11 @@
+function isMobile() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const isWindows = /IEMobile/i.test(userAgent);
+  const isAndroid = /Android/i.test(userAgent);
+  const isiOS = /iPhone|iPad|iPod/i.test(userAgent);
+  return isiOS || isAndroid || isWindows;
+}
+
 function Select() {
   const container = document.querySelector('.select-container');
   const select = container.querySelector('select');
@@ -7,6 +15,8 @@ function Select() {
   const uiOptions = ui.querySelector('.select-options');
   const liOptions = [];
   let previousActive = 0;
+
+  select.classList.toggle( 'select-it--native', isMobile() );
 
   function open( event ) {
     const isOption = event.target.getAttribute('role') === 'option';
