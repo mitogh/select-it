@@ -8,7 +8,7 @@
       position: relative;
     }
 
-    .select-ui {
+    .select-it {
       position: relative;
       z-index: 2;
     }
@@ -47,16 +47,16 @@
       border-bottom-left-radius: 10px;
       display: none;
     }
-    .select-ui-option {
+    .select-it-option {
       padding: 10px;
     }
 
-    .select-ui-option:hover:not(.disabled){
+    .select-it-option:hover:not(.disabled){
       background-color: #418bd6;
       color: #FFF;
     }
 
-    .select-ui--is-open .select-options {
+    .select-it--is-open .select-options {
       display: block;
     }
 
@@ -81,7 +81,7 @@
       border-right: 7px solid transparent;
       border-top: 7px solid #CCC;
     }
-    .select-ui--is-open .arrow {
+    .select-it--is-open .arrow {
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
       border-bottom: 7px solid #CCC;
@@ -91,7 +91,7 @@
   </head>
   <body>
     <div class="select-container">
-      <div class="select-ui" tabindex="0" role="listbox">
+      <div class="select-it" tabindex="0" role="listbox">
         <div class="select-placeholder-container">
           <span class="select-placeholder"></span>
           <i class="arrow"></i>
@@ -101,7 +101,7 @@
       <select name="select">
         <option value="value1">Value 1</option> 
         <option value="value2" disabled>Value 2</option>
-        <option value="value3">Value 3</option>
+        <option value="value3" selected>Value 3</option>
       </select>
     </div>
   </body>
