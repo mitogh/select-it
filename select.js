@@ -6,66 +6,85 @@ function isMobile() {
   return isiOS || isAndroid || isWindows;
 }
 
-function Select() {
-  const container = document.querySelector('.select-container');
-  const select = container.querySelector('select');
-  const options = Array.from( select.querySelectorAll('option') );
-  const ui = container.querySelector('.select-ui');
-  const placeholder = container.querySelector('.select-placeholder');
+const defaultOptions = {
+  container: null,
+  uiContainer: '.select-it',
+  uiPlaceholder: '.select-it__placeholder',
+  classNames: {
+    open: 'select-it--is-open',
+    selected: 'selected',
+    disabled: 'disabled',
+    native: 'select-it--native',
+  },
+};
+
+const passiveEvent = { passive: true };
+
+function Select( userOptions ) {
+  const options = Object.assign( defaultOptions, userOptions );
+  if ( ! options.container ) {
+    console.error( 'A container must be supplied' );
+    return;
+  }
+  const select = options.container.querySelector('select');
+  const optionsEl = Array.from( select.querySelectorAll('option') );
+  const ui = options.container.querySelector( options.uiContainer );
+  const placeholder = options.container.querySelector('.select-placeholder');
   const uiOptions = ui.querySelector('.select-options');
   const liOptions = [];
   let previousActive = 0;
 
   if ( isMobile() ) {
-    select.classList.add( 'select-it--native' );
+    select.classList.add( options.classNames.native );
   } else {
-    ui.addEventListener('blur', close);
-    ui.addEventListener('click', open);
+    ui.addEventListener( 'blur', close, passiveEvent );
+    ui.addEventListener( 'click', open, passiveEvent );
   }
 
   function open( event ) {
-    const isOption = event.target.getAttribute('role') === 'option';
-    ui.classList.toggle( 'select-ui--is-open', ! isOption );
+    const isOption = event.target.getAttribute( 'role' ) === 'option';
+    ui.classList.toggle( options.classNames.open, ! isOption );
   }
 
   function close() {
-    ui.classList.remove( 'select-ui--is-open');
+    ui.classList.remove( options.classNames.open );
   }
 
-  options.forEach( addOption );
-  ui.addEventListener('keydown', (event) => {
-    const space = event.code === 'Space' || event.keyCode === 32;
-    if ( space ) {
-      ui.classList.add( 'select-ui--is-open');
-    }
-  });
+  optionsEl.forEach( addOption );
+  select.addEventListener( 'change', onChange, passiveEvent );
+  ui.addEventListener( 'keydown', keyDownListener, passiveEvent );
+
+  function keyDownListener( event ) {
+    const isSpaceKey = event.code === 'Space' || event.keyCode === 32;
+    ui.classList.toggle( options.classNames.open, isSpaceKey );
+  }
 
   function addOption( node, index ) {
-    const li = document.createElement('div');
-    li.classList.add('select-ui-option');
-    li.setAttribute('role', 'option');
+    const option = document.createElement('div');
+    option.classList.add('select-it-option');
+    option.setAttribute('role', 'option');
     if ( node.selected ) {
       previousActive = index;
-      setActive( node, li );
+      setActive( node, option );
     }
-    li.disabled = node.disabled;
-    li.value = node.getAttribute('value');
-    li.innerHTML = node.innerHTML;
-    if ( ! node.disabled ) {
-      li.addEventListener( 'click', setActiveByClick(li, index) );
+    option.disabled = node.disabled;
+    option.value = node.getAttribute('value');
+    option.innerHTML = node.innerHTML;
+    if ( node.disabled ) {
+      option.classList.add( options.classNames.disabled );
     } else {
-      li.classList.add('disabled');
+      option.addEventListener( 'click', setActiveByClick(option, index) );
     }
-    uiOptions.appendChild(li);
-    liOptions.push( li );
+    uiOptions.appendChild(option);
+    liOptions.push( option );
   }
 
   function setActiveByClick( node, index ) {
     function listener() {
       select.selectedIndex = index;
       placeholder.innerHTML = node.innerHTML;
-      liOptions[previousActive].classList.remove('selected');
-      liOptions[index].classList.add('selected')
+      liOptions[previousActive].classList.remove( options.classNames.selected );
+      liOptions[index].classList.add( options.classNames.selected )
       previousActive = index;
     }
     return listener;
@@ -77,19 +96,19 @@ function Select() {
       placeholder.hasInitialPlaceholder = true;
     }
     if ( li ) {
-      li.classList.add('selected');
+      li.classList.add( options.classNames.selected );
     }
   }
 
-  select.addEventListener('change', onChange);
-
   function onChange(event) {
-    setActive( options[ select.selectedIndex ] );
-    placeholder.innerHTML = options[ select.selectedIndex ].innerHTML;
-    liOptions[previousActive].classList.remove('selected');
-    liOptions[select.selectedIndex].classList.add('selected')
+    setActive( optionsEl[ select.selectedIndex ] );
+    placeholder.innerHTML = optionsEl[ select.selectedIndex ].innerHTML;
+    liOptions[previousActive].classList.remove( options.classNames.selected );
+    liOptions[select.selectedIndex].classList.add( options.classNames.selected )
     previousActive = select.selectedIndex;
   }
 }
 
-new Select();
+new Select({
+  container: document.querySelector('.select-container'),
+});
